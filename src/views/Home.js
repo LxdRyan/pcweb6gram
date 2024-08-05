@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 const Home = () => {
   const [posts, setPosts] = useState([]);
 
-  async function getAllPosts() {
+  const getPosts = async () => {
     setPosts([]);
-  }
+  };
 
   useEffect(() => {
-    getAllPosts();
+    getPosts();
   }, []);
 
   const ImagesRow = () => {
@@ -21,7 +21,7 @@ const Home = () => {
     <>
       <Navbar variant="light" bg="light">
         <Container>
-          <Navbar.Brand href="/">Tinkergram</Navbar.Brand>
+          <Navbar.Brand href="/">FosSnS</Navbar.Brand>
           <Nav>
             <Nav.Link href="/add">New Post</Nav.Link>
           </Nav>
@@ -36,7 +36,7 @@ const Home = () => {
   );
 };
 
-function ImageSquare({ post }) {
+const ImageSquare = ({ post }) => {
   const { image, id } = post;
   return (
     <Link
@@ -57,6 +57,6 @@ function ImageSquare({ post }) {
       />
     </Link>
   );
-}
+};
 
 export default Home;
