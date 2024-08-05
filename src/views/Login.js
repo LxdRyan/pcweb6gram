@@ -46,6 +46,7 @@ const Login = () => {
               try {
                 await signInWithEmailAndPassword(auth, username, password);
                 navigate("/");
+                console.log(`${username} logged in`);
               } catch (error) {
                 setError(error.message);
               }

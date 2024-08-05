@@ -1,9 +1,14 @@
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
 
 const SignUp = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   return (
     <Container>
@@ -32,9 +37,26 @@ const SignUp = () => {
           />
           <a href="/login">Have an existing account? Login here.</a>
         </Form.Group>
-        <Button variant="primary">Sign Up</Button>
+        <Button
+          variant="primary"
+          onClick={async () => {
+            setError("");
+            const notEmpty = username && password;
+            if (notEmpty) {
+              try {
+                await createUserWithEmailAndPassword(auth, username, password);
+                navigate("/");
+                console.log(`${username} created`);
+              } catch (error) {
+                setError(error.message);
+              }
+            }
+          }}
+        >
+          Sign Up
+        </Button>
       </Form>
-      <p></p>
+      <p>{error}</p>
     </Container>
   );
 };
