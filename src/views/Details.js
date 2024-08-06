@@ -7,11 +7,11 @@ import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import Menubar from "../templates/Menubar";
 
 const Details = () => {
-  const [caption, setCaption] = useState("");
-  const [image, setImage] = useState("");
+  const [user, loading] = useAuthState(auth);
   const params = useParams();
   const { id } = params;
-  const [user, loading] = useAuthState(auth);
+  const [caption, setCaption] = useState("");
+  const [image, setImage] = useState("");
   const navigate = useNavigate();
 
   const deletePost = async (id) => {
