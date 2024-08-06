@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, Col, Container, Image, Row } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate, useParams } from "react-router-dom";
+import { auth, db } from "../firebase";
+import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import Menubar from "../templates/Menubar";
 
 const Details = () => {
@@ -8,17 +11,30 @@ const Details = () => {
   const [image, setImage] = useState("");
   const params = useParams();
   const { id } = params;
+  const [user, loading] = useAuthState(auth);
+  const navigate = useNavigate();
 
-  const deletePost = async (id) => {};
+  const deletePost = async (id) => {
+    await deleteDoc(doc(db, "posts", id));
+    navigate("/");
+  };
 
   const getPost = async (id) => {
-    setCaption("");
-    setImage("");
+    const postDocument = await getDoc(doc(db, "posts", id));
+    const post = postDocument.data();
+    setCaption(post.caption);
+    setImage(post.image);
   };
 
   useEffect(() => {
+    if (loading) {
+      return;
+    }
+    if (!user) {
+      return navigate("/login");
+    }
     getPost(id);
-  }, [id]);
+  }, [id, loading, navigate, user]);
 
   return (
     <>

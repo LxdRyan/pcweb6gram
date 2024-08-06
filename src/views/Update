@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
+
 import { useParams } from "react-router-dom";
 import Menubar from "../templates/Menubar";
 
 const Update = () => {
   const params = useParams();
-  const id = params.id;
+  const { id } = params;
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState("");
 
   const updatePost = async () => {};
 
-  const getPost = async (id) => {
-    setCaption("");
-    setImage("");
-  };
+  const getPost = async (id) => {};
 
   useEffect(() => {
     getPost(id);

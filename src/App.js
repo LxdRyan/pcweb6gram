@@ -12,7 +12,7 @@ const App = () => {
     { path: "/", element: <Home /> },
     { path: "/login", element: <Login /> },
     { path: "/signup", element: <SignUp /> },
-    { path: "/details/:id", element: <Details /> },
+    { path: "/post/:id", element: <Details /> },
     { path: "/update/:id", element: <Update /> },
     { path: "/add", element: <Add /> },
   ]);
