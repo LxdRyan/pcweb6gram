@@ -4,7 +4,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate, useParams } from "react-router-dom";
 import { auth, db } from "../firebase";
 import { doc, getDoc, deleteDoc } from "firebase/firestore";
-import Menubar from "../templates/Menubar";
+import { getStorage, ref, deleteObject } from "firebase/storage";
+import Menubar from "../components/Menubar";
 
 const Details = () => {
   const [user, loading] = useAuthState(auth);
@@ -15,13 +16,14 @@ const Details = () => {
   const navigate = useNavigate();
 
   const deletePost = async (id) => {
+    const imageRef = ref(getStorage(), `images/${image.name}`);
+    await deleteObject(imageRef);
     await deleteDoc(doc(db, "posts", id));
     navigate("/");
   };
 
   const getPost = async (id) => {
-    const postDocument = await getDoc(doc(db, "posts", id));
-    const post = postDocument.data();
+    const post = (await getDoc(doc(db, "posts", id))).data();
     setCaption(post.caption);
     setImage(post.image);
   };
@@ -42,7 +44,7 @@ const Details = () => {
       <Container>
         <Row style={{ marginTop: "2rem" }}>
           <Col md="6">
-            <Image src={image} style={{ width: "100%" }} />
+            <Image src={image.url} style={{ width: "100%" }} />
           </Col>
           <Col>
             <Card>

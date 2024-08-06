@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Container, Image, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { db } from "../firebase";
-import Menubar from "../templates/Menubar";
+import Menubar from "../components/Menubar";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -33,7 +33,7 @@ const Home = () => {
         }}
       >
         <Image
-          src={image}
+          src={image.url}
           style={{
             objectFit: "cover",
             width: "18rem",

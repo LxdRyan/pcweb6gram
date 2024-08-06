@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { auth, db, storage } from "../firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import Menubar from "../templates/Menubar";
+import Menubar from "../components/Menubar";
+// import autoCaption from "../components/autoCaption";
 
 const Add = () => {
   const [user, loading] = useAuthState(auth);
@@ -18,7 +19,10 @@ const Add = () => {
     const imageRef = ref(storage, `images/${image.name}`);
     const response = await uploadBytes(imageRef, image);
     const imageUrl = await getDownloadURL(response.ref);
-    await addDoc(collection(db, "posts"), { caption, image: imageUrl });
+    await addDoc(collection(db, "posts"), {
+      caption,
+      image: { name: image.name, url: imageUrl },
+    });
     navigate("/");
   };
 
@@ -32,6 +36,15 @@ const Add = () => {
       );
     }
   };
+
+  //   TODO add auto caption
+  //   const showAutoCaption = () => {
+  //     if (!caption) {
+  //       return autoCaption(image.name);
+  //     } else {
+  //       return caption;
+  //     }
+  //   };
 
   useEffect(() => {
     if (loading) {
@@ -52,7 +65,7 @@ const Add = () => {
             <Form.Label>Caption</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Lovely day"
+              placeholder="Caption"
               value={caption}
               onChange={(text) => setCaption(text.target.value)}
             />
@@ -66,6 +79,7 @@ const Add = () => {
                 const previewUrl = URL.createObjectURL(imageFile);
                 setPreview(previewUrl);
                 setImage(imageFile);
+                // setCaption(showAutoCaption(image.name));
               }}
             />
           </Form.Group>

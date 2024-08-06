@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { auth, db, storage } from "../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import Menubar from "../templates/Menubar";
+import Menubar from "../components/Menubar";
 
 const Update = () => {
   const [user, loading] = useAuthState(auth);
@@ -17,10 +17,14 @@ const Update = () => {
   const navigate = useNavigate();
 
   const updatePost = async () => {
-    const imageRef = ref(storage, `images/${image.name}`);
+    const imageName = image.name;
+    const imageRef = ref(storage, `images/${imageName}`);
     const response = await uploadBytes(imageRef, image);
     const imageUrl = await getDownloadURL(response.ref);
-    await updateDoc(doc(db, "posts", id), { caption, image: imageUrl });
+    await updateDoc(doc(db, "posts", id), {
+      caption,
+      image: { name: image.name, url: imageUrl },
+    });
     navigate(`/post/${id}`);
   };
 
