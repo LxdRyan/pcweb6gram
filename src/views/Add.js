@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button, Container, Form, Image, Row } from "react-bootstrap";
-import { addDoc, collection } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth, db, storage } from "../firebase";
+import { addDoc, collection } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Menubar from "../templates/Menubar";
 
@@ -61,8 +61,8 @@ const Add = () => {
             <Form.Label>Image</Form.Label>
             <Form.Control
               type="file"
-              onChange={(image) => {
-                const imageFile = image.target.files[0];
+              onChange={(e) => {
+                const imageFile = e.target.files[0];
                 const previewUrl = URL.createObjectURL(imageFile);
                 setPreview(previewUrl);
                 setImage(imageFile);

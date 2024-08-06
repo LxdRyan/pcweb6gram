@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Button, Container, Form } from "react-bootstrap";
+import { Button, Container, Form, Image, Row } from "react-bootstrap";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate, useParams } from "react-router-dom";
-import { auth, db } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Menubar from "../templates/Menubar";
 
 const Update = () => {
@@ -12,10 +13,14 @@ const Update = () => {
   const { id } = params;
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState("");
+  const [preview, setPreview] = useState("");
   const navigate = useNavigate();
 
   const updatePost = async () => {
-    await updateDoc(doc(db, "posts", id), { caption, image });
+    const imageRef = ref(storage, `images/${image.name}`);
+    const response = await uploadBytes(imageRef, image);
+    const imageUrl = await getDownloadURL(response.ref);
+    await updateDoc(doc(db, "posts", id), { caption, image: imageUrl });
     navigate(`/post/${id}`);
   };
 
@@ -24,6 +29,18 @@ const Update = () => {
     const post = postDocument.data();
     setCaption(post.caption);
     setImage(post.image);
+    setPreview(post.image);
+  };
+
+  const ShowPreview = () => {
+    if (preview) {
+      return (
+        <Image
+          src={preview}
+          style={{ objectFit: "cover", width: "12rem", height: "12rem" }}
+        />
+      );
+    }
   };
 
   useEffect(() => {
@@ -51,19 +68,21 @@ const Update = () => {
               onChange={(text) => setCaption(text.target.value)}
             />
           </Form.Group>
-
           <Form.Group className="mb-3" controlId="image">
             <Form.Label>Image URL</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="https://zca.sg/img/1"
-              value={image}
-              onChange={(text) => setImage(text.target.value)}
+              type="file"
+              onChange={(e) => {
+                const imageFile = e.target.files[0];
+                const previewUrl = URL.createObjectURL(imageFile);
+                setPreview(previewUrl);
+                setImage(imageFile);
+              }}
             />
-            <Form.Text className="text-muted">
-              Make sure the url has a image type at the end: jpg, jpeg, png.
-            </Form.Text>
           </Form.Group>
+          <Row className="mb-3">
+            <ShowPreview />
+          </Row>
           <Button variant="primary" onClick={(e) => updatePost()}>
             Submit
           </Button>
