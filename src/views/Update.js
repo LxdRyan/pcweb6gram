@@ -30,11 +30,10 @@ const Update = () => {
   };
 
   const getPost = async (id) => {
-    const postDocument = await getDoc(doc(db, "posts", id));
-    const post = postDocument.data();
+    const post = (await getDoc(doc(db, "posts", id))).data();
     setCaption(post.caption);
     setImage(post.image);
-    setPreview(post.image);
+    setPreview(post.image.url);
   };
 
   const ShowPreview = () => {
@@ -95,7 +94,7 @@ const Update = () => {
           <Row className="mb-3">
             <ShowPreview />
           </Row>
-          <Button variant="primary" onClick={(e) => updatePost()}>
+          <Button variant="primary" onClick={() => updatePost()}>
             Submit
           </Button>
         </Form>
