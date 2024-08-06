@@ -48,7 +48,7 @@ const SignUp = () => {
                 navigate("/");
                 console.log(`${username} created`);
               } catch (error) {
-                setError(error.message);
+                setError(error);
               }
             }
           }}
