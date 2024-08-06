@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { auth, db, storage } from "../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import autoCaption from "../components/autoCaption";
 import Menubar from "../components/Menubar";
 
 const Update = () => {
@@ -47,6 +48,12 @@ const Update = () => {
     }
   };
 
+  const showAutoCaption = (filename) => {
+    if (!caption) {
+      setCaption(autoCaption(filename));
+    }
+  };
+
   useEffect(() => {
     if (loading) {
       return;
@@ -81,6 +88,7 @@ const Update = () => {
                 const previewUrl = URL.createObjectURL(imageFile);
                 setPreview(previewUrl);
                 setImage(imageFile);
+                showAutoCaption(imageFile.name);
               }}
             />
           </Form.Group>

@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { auth, db, storage } from "../firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import autoCaption from "../components/autoCaption";
 import Menubar from "../components/Menubar";
-// import autoCaption from "../components/autoCaption";
 
 const Add = () => {
   const [user, loading] = useAuthState(auth);
@@ -37,14 +37,11 @@ const Add = () => {
     }
   };
 
-  //   TODO add auto caption
-  //   const showAutoCaption = () => {
-  //     if (!caption) {
-  //       return autoCaption(image.name);
-  //     } else {
-  //       return caption;
-  //     }
-  //   };
+  const showAutoCaption = (filename) => {
+    if (!caption) {
+      setCaption(autoCaption(filename));
+    }
+  };
 
   useEffect(() => {
     if (loading) {
@@ -79,7 +76,7 @@ const Add = () => {
                 const previewUrl = URL.createObjectURL(imageFile);
                 setPreview(previewUrl);
                 setImage(imageFile);
-                // setCaption(showAutoCaption(image.name));
+                showAutoCaption(imageFile.name);
               }}
             />
           </Form.Group>

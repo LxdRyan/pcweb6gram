@@ -14,7 +14,6 @@ const Home = () => {
       return { id: doc.id, ...doc.data() };
     });
     setPosts(posts);
-    console.log(posts);
   };
 
   useEffect(() => {
